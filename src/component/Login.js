@@ -5,6 +5,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Form, Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { login } from "../util/index";
+import { ACCESS_TOKEN, ID } from "../constant/index";
 const { Item } = Form;
 
 const Login = () => {
@@ -15,28 +16,24 @@ const Login = () => {
     const loginRequest = { ...values };
     login(loginRequest)
       .then((response) => {
-        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem(ACCESS_TOKEN, response.accessToken);
+        localStorage.setItem(ID, response.userId);
         navigate("/home", { replace: true });
       })
       .catch((error) => {
-        console.error("Login error:", error); // Log the entire error object
-      
-        if (error.response && error.response.status === 401) {
+        if (error.status === 400 || 401) {
           notification.error({
             message: "VCLC App",
-            description: "Your Email or Password is incorrect. Please try again!",
+            description: "Your Email and Password are incorrect. Please try again.",
           });
         } else {
           notification.error({
             message: "VCLC App",
-            description:
-              error.response && error.response.data
-                ? error.response.data.message
-                : "Sorry! Something went wrong. Please try again!",
+            description: error.message || "Sorry! Something went wrong. Please try again.",
           });
         }
       });
-      
+
   };
 
   return (
