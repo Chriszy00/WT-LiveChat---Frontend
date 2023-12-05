@@ -180,7 +180,7 @@ const Chat = () => {
                     <div className="col-9 text-white mt-0 p-0" style={{ height: "93.8vh", borderLeft: '1px solid #3F4041'}}>
                     <h5 className='ps-3 py-2'>{selectedUser}</h5>
                     {conversations.map((conversation) => (
-                      <div key={conversation.id} style={{ marginRight: "50px", display: 'flex', flexDirection: conversation.sender.id === parseInt(localStorage.getItem('ID'), 10) ? 'row-reverse' : 'row', justifyContent: 'flex-start', position: 'relative', margin: '5px' }}>
+                      <div key={conversation.id} style={{ marginRight: "50px", display: 'flex', flexDirection: conversation.sender.id === parseInt(localStorage.getItem('ID'), 10) ? 'row-reverse' : 'row', margin: '5px' }}>
                           
                           <div
                             key={conversation.id} 
@@ -195,8 +195,68 @@ const Chat = () => {
                               color: conversation.sender.id === parseInt(localStorage.getItem('ID'), 10) ? 'white' : 'black',
                               position: 'relative',
                             }}
+                            onMouseEnter={() => {
+                              if (conversation.sender.id === parseInt(localStorage.getItem('ID'), 10)) {
+                                setSenderMessage(conversation.id);
+                              } else {
+                                setReceiverMessage(conversation.id);
+                              }
+                            }}
+                            onMouseLeave={() => {
+                              setSenderMessage(null); 
+                              setReceiverMessage(null)}
+                            }
                           >
+
+{senderMessage === conversation.id && (
+                              <div className='text-white' style={{ 
+                                fontSize: "0.8em", 
+                                position: 'absolute', 
+                                top: '50%', 
+                                right: '50%',  
+                                padding: '5px', 
+                                display: 'inline-block', 
+                                width: '1000%',
+                                transform: 'translateY(-50%)', 
+                              }}>
+                                {new Date(conversation.dateTime).toLocaleString('en-US', { 
+                                  weekday: 'short', 
+                                  year: 'numeric', 
+                                  month: 'short', 
+                                  day: 'numeric', 
+                                  hour: 'numeric', 
+                                  minute: 'numeric', 
+                                  second: 'numeric', 
+                                  hour12: true 
+                                })}
+                              </div>
+                            )}
+
                             {conversation.message}
+
+                            {receiverMessage === conversation.id && (
+                              <span style={{ 
+                                fontSize: "0.8em", 
+                                position: 'absolute', 
+                                top: '50%', 
+                                left: "100%", 
+                                padding: '5px', 
+                                display: 'inline-block', 
+                                width: '1000%',
+                                transform: 'translateY(-50%)', // Center vertically
+                              }}>
+                                {new Date(conversation.dateTime).toLocaleString('en-US', { 
+                                  weekday: 'short', 
+                                  year: 'numeric', 
+                                  month: 'short', 
+                                  day: 'numeric', 
+                                  hour: 'numeric', 
+                                  minute: 'numeric', 
+                                  second: 'numeric', 
+                                  hour12: true 
+                                })}
+                              </span>
+                            )}
 
                           </div>
                           <br />
